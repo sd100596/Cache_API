@@ -1,19 +1,3 @@
-# Cache_API
-A REST API consisting of methods to interact with a cache.
-
-Installation
-To install the app, clone the repository and run the following command:
-
-```
-npm install
-```
-
-Usage
-To start the app, run the following command:
-
-```
-npm start
-```
 
 # Cache_API
 A REST API consisting of methods to interact with a cache.
