@@ -24,3 +24,5 @@ app.listen(port, function (err) {
     else
         console.log("Server has been started at port " + port)
 })
+
+module.exports = app;
