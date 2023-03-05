@@ -4,13 +4,22 @@ const { connectMongo } = require('./connection')
 const app = express()
 const errorHandler = require("./middlewares/errorHandler")
 const cacheRouter = require("./routes/cacheRouter")
+const helmet = require('helmet');
+const port = process.env.PORT;
 
-//fetching mongodb url from the env file
-connectMongo(process.env.MONGODB_URI)
+connectMongo(process.env.MONGODB_URI)   //fetching mongodb url from the env file
 
-app.use(express.json());
+app.use(helmet())                       //Added layers of security
+app.use(cors());                        //Allowing cross origin resource sharing
+app.use(express.json());                //Body parser for json data
 
-app.use("/cache", cacheRouter)
-app.use(errorHandler)
+app.use("/cache", cacheRouter)          //Created API router for /cache paths
 
-app.listen(process.env.PORT)
+app.use(errorHandler)                   //Error Handler for catching unknown errors
+
+app.listen(port, function (err) {
+    if (err)
+        console.log("Error in starting server")
+    else
+        console.log("Server has been started at port " + port)
+})
