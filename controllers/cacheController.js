@@ -48,4 +48,54 @@ const handleGetAllKeys = async (req, res, next) => {
     }
 }
 
-module.exports = { handleGetKey, handleGetAllKeys }
+const handleUpsertKey = async (req, res, next) => {
+    try {
+        const { key_name, value } = req.body;
+        if (!key_name) {
+            return res.status(400).send({
+                error: "Please provide a key name"
+            })
+        }
+        else if (!value) {
+            return res.status(400).send({
+                error: "Please provide a value"
+            })
+        }
+        await Cache.findOneAndUpdate({ key: key_name },
+            {
+                key: key_name,
+                value: value,
+                createdAt: Date.now()
+            },
+            { upsert: true, new: true })
+        res.status(201).send({
+            output: "Cache data updated",
+            key: key_name
+        })
+    }
+    catch (err) {
+        next(err)
+    }
+}
+
+const handleDeleteKey = async (req, res, next) => {
+
+    try {
+        const key_name = req.headers["key-name"];
+        await Cache.deleteOne({ key: key_name })
+        res.status(204).json({ key_deletion: "success" })
+    } catch (err) {
+        next(err)
+    }
+}
+
+const handleClearCache = async (req, res, next) => {
+    try {
+        await Cache.deleteMany({})
+        res.status(204).json({ cache_clear: "success" })
+    } catch (err) {
+        next(err)
+    }
+}
+
+module.exports = { handleGetKey, handleGetAllKeys, handleUpsertKey, handleDeleteKey, handleClearCache }
