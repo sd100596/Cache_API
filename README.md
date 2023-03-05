@@ -23,8 +23,6 @@ Create a new cache entry.
 **Required Headers:**
 
 - Content-Type: application/json
-- key-name: <name of cache key>
-- value: <value of cache key>
 
 Request Body:
 json
