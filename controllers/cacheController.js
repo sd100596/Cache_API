@@ -24,9 +24,9 @@ const handleGetKey = async (req, res, next) => {
                 value: random_value,
                 createdAt: Date.now()
             })
-            res.status(201).send([{ output: "Cache Miss", key: key_name, value: random_value }])
+            res.status(201).send({ output: "Cache Miss", key: key_name, value: random_value })
         } else {
-            res.send([{ output: "Cache Hit", key: record[0].key, value: record[0].value }])
+            res.send({ output: "Cache Hit", key: record[0].key, value: record[0].value })
         }
     }
     catch (err) {
@@ -37,9 +37,9 @@ const handleGetKey = async (req, res, next) => {
 const handleGetAllKeys = async (req, res, next) => {
     try {
         const records = await Cache.find({})
-        const cache_data = []
+        const cache_data = { keys: [] }
         for (let each of records) {
-            cache_data.push({ key: each.key, value: each.value })
+            cache_data.keys.push(each.key)
         }
         res.send(cache_data)
     }
@@ -83,7 +83,7 @@ const handleDeleteKey = async (req, res, next) => {
     try {
         const key_name = req.headers["key-name"];
         await Cache.deleteOne({ key: key_name })
-        res.status(204).json({ key_deletion: "success" })
+        res.status(204).send({ key_deletion: "success" })   //sending response optional
     } catch (err) {
         next(err)
     }

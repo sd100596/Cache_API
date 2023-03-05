@@ -5,7 +5,7 @@ const { handleGetKey, handleGetAllKeys, handleUpsertKey, handleDeleteKey, handle
 router.get('/fetch-key', handleGetKey)
 router.get('/fetch-all-keys', handleGetAllKeys)
 router.post('/upsert-key', handleUpsertKey)
-router.delete('/delete-key/', handleDeleteKey)
+router.delete('/delete-key', handleDeleteKey)
 router.delete('/clear', handleClearCache)
 
 module.exports = router;

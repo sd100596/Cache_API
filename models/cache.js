@@ -10,7 +10,7 @@ const cacheSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.Mixed,
         required: true
     },
-    createdAt: { type: Date, expires: '30m', default: Date.now }
+    createdAt: { type: Date, expires: 3600, default: Date.now }
 }
 );
 

@@ -5,6 +5,7 @@ const app = express()
 const errorHandler = require("./middlewares/errorHandler")
 const cacheRouter = require("./routes/cacheRouter")
 const helmet = require('helmet');
+const cors = require('cors')
 const port = process.env.PORT;
 
 connectMongo(process.env.MONGODB_URI)   //fetching mongodb url from the env file
