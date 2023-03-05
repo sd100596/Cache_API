@@ -3,4 +3,8 @@ const errorHandler = (error, req, res, next) => {
     res.send({ message: error.message || "Something went wrong" })
 }
 
-module.exports = errorHandler;
+const invalidRoute = (req, res, next) => {
+    res.status(404).send({ error: "Invalid Route" })
+}
+
+module.exports = {errorHandler, invalidRoute}

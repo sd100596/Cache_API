@@ -9,6 +9,7 @@ beforeEach(async () => {
   await mongoose.connect(process.env.MONGODB_URI);
 });
 
+//Testing different API endpoints
 
 describe("POST /cache/upsert-key", () => {
   it("should add provided key and value in the cache", async () => {
@@ -75,5 +76,5 @@ describe("DELETE /cache/clear", () => {
 
 /* Closing database connection after each test. */
 afterEach(async () => {
-  await mongoose.connection.close();
+  await mongoose.connection.close()
 });

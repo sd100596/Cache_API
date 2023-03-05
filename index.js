@@ -2,7 +2,7 @@ require('dotenv').config()
 const express = require('express');
 const { connectMongo } = require('./connection')
 const app = express()
-const errorHandler = require("./middlewares/errorHandler")
+const { errorHandler, invalidRoute } = require("./middlewares/errorHandler")
 const cacheRouter = require("./routes/cacheRouter")
 const helmet = require('helmet');
 const cors = require('cors')
@@ -16,6 +16,7 @@ app.use(express.json());                //Body parser for json data
 
 app.use("/cache", cacheRouter)          //Created API router for /cache paths
 
+app.use("*", invalidRoute)              //To handle invalid routes
 app.use(errorHandler)                   //Error Handler for catching unknown errors
 
 app.listen(port, function (err) {
