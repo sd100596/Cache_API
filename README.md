@@ -17,7 +17,7 @@ npm start
 ```
 
 ## API Routes
-### POST /cache/upsert-key
+### POST /cache/set
 Create a new cache entry.
 
 **Required Headers:**
@@ -41,7 +41,7 @@ Response: 201
 }
 ```
 
-### GET /cache/fetch-key
+### GET /cache/get
 Fetch an existing cache value based on the key provided.
 If key doesn't exist, new cache entry with provided key is added in cache with a random string value. 
 
@@ -68,7 +68,7 @@ Response: 200
         "value": "vjkk4"
 }  
 ```
-### GET /cache/fetch-all-keys
+### GET /cache/keys
 Fetch all the keys present in the cache
 
 
@@ -81,7 +81,7 @@ Response: 200
 }
 ```
 
-### DELETE /cache/delete-key
+### DELETE /cache/delete
 Deletes a key present in the cache
 
 **Required Headers:**
