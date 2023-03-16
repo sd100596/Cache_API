@@ -48,7 +48,7 @@ const handleGetAllKeys = async (req, res, next) => {
     }
 }
 
-const handleUpsertKey = async (req, res, next) => {
+const handleSetKey = async (req, res, next) => {
     try {
         const { key_name, value } = req.body;
         if (!key_name) {
@@ -98,4 +98,4 @@ const handleClearCache = async (req, res, next) => {
     }
 }
 
-module.exports = { handleGetKey, handleGetAllKeys, handleUpsertKey, handleDeleteKey, handleClearCache }
+module.exports = { handleGetKey, handleGetAllKeys, handleSetKey, handleDeleteKey, handleClearCache }

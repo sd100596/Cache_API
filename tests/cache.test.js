@@ -11,9 +11,9 @@ beforeEach(async () => {
 
 //Testing different API endpoints
 
-describe("POST /cache/upsert-key", () => {
+describe("POST /cache/set", () => {
   it("should add provided key and value in the cache", async () => {
-    const res = await request(app).post("/cache/upsert-key").send({
+    const res = await request(app).post("/cache/set").send({
       "key_name": "John Doe",
       "value": "johndoe@example.com"
     });
@@ -21,18 +21,18 @@ describe("POST /cache/upsert-key", () => {
   });
 });
 
-describe("GET /cache/fetch-all-keys", () => {
+describe("GET /cache/keys", () => {
   it("should return all the keys", async () => {
-    const res = await request(app).get("/cache/fetch-all-keys");
+    const res = await request(app).get("/cache/keys");
     expect(res.statusCode).toBe(200);
     expect(res.body.keys.length).toBeGreaterThan(0);
   });
 });
 
 
-describe("GET /cache/fetch-key", () => {
+describe("GET /cache/get", () => {
   it("should return value of the key provided in header", async () => {
-    const res = await request(app).get("/cache/fetch-key").set({
+    const res = await request(app).get("/cache/get").set({
       'key-name': "John Doe"
     })
 
@@ -42,9 +42,9 @@ describe("GET /cache/fetch-key", () => {
   });
 });
 
-describe("GET /cache/fetch-key", () => {
+describe("GET /cache/get", () => {
   it("should add new key if key name does not exist", async () => {
-    const res = await request(app).get("/cache/fetch-key").set({
+    const res = await request(app).get("/cache/get").set({
       'key-name': "BlueBerry"
     })
     expect(res.statusCode).toBe(201);
@@ -53,10 +53,10 @@ describe("GET /cache/fetch-key", () => {
   });
 });
 
-describe("DELETE /cache/delete-key", () => {
+describe("DELETE /cache/delete", () => {
   it("should delete a key", async () => {
     const res = await request(app).delete(
-      "/cache/delete-key"
+      "/cache/delete"
     )
     .set({
       key_name: "John Doe"
