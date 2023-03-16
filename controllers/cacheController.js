@@ -1,4 +1,4 @@
-const Cache = require("../models/cache");
+const userServices = require('../services/userServices')
 
 const handleGetKey = async (req, res, next) => {
   try {
@@ -9,30 +9,21 @@ const handleGetKey = async (req, res, next) => {
       });
     }
 
-    const record = await Cache.find({ key: keyName });
-    const documentCount = await Cache.countDocuments();
+    const result = await userServices.getData(keyName);
 
-    if (!record.length) {
+    if (!result.exists) {
       //Generate random String
       const randomValue = (Math.random() + 1).toString(36).substring(7);
 
-      //Deleting oldest document by Date if limit of 100 is reached
-      if (documentCount === 100) {
-        await Cache.findOneAndDelete({}, { sort: { createdAt: 1 } });
-      }
-      await Cache.create({
-        key: keyName,
-        value: randomValue,
-        createdAt: Date.now(),
-      });
-      res
-        .status(201)
-        .send({ output: "Cache Miss", key: keyName, value: randomValue });
+      console.log("Cache Miss");
+      await userServices.setData(keyName, randomValue);
+
+      res.status(201).send({ key: keyName, value: randomValue });
     } else {
+      console.log("Cache Hit");
       res.send({
-        output: "Cache Hit",
-        key: record[0].key,
-        value: record[0].value,
+        key: result.key,
+        value: result.value,
       });
     }
   } catch (err) {
@@ -42,11 +33,8 @@ const handleGetKey = async (req, res, next) => {
 
 const handleGetAllKeys = async (req, res, next) => {
   try {
-    const records = await Cache.find({});
-    const cacheData = { keys: [] };
-    for (let each of records) {
-      cacheData.keys.push(each.key);
-    }
+    const cacheData = {};
+    cacheData.keys = await userServices.getAllKeys();
     res.send(cacheData);
   } catch (err) {
     next(err);
@@ -65,18 +53,10 @@ const handleSetKey = async (req, res, next) => {
         error: "Please provide a value",
       });
     }
-    await Cache.findOneAndUpdate(
-      { key: keyName },
-      {
-        key: keyName,
-        value: value,
-        createdAt: Date.now(),
-      },
-      { upsert: true, new: true }
-    );
+    await userServices.setData(keyName, value);
     res.status(201).send({
-      output: "Cache data updated",
       key: keyName,
+      value: value,
     });
   } catch (err) {
     next(err);
@@ -86,7 +66,7 @@ const handleSetKey = async (req, res, next) => {
 const handleDeleteKey = async (req, res, next) => {
   try {
     const keyName = req.headers["key-name"];
-    await Cache.deleteOne({ key: keyName });
+    await userServices.deleteKey(keyName);
     res.status(204).send({ keyDeletion: "success" }); //sending response optional
   } catch (err) {
     next(err);
@@ -95,7 +75,7 @@ const handleDeleteKey = async (req, res, next) => {
 
 const handleClearCache = async (req, res, next) => {
   try {
-    await Cache.deleteMany({});
+    await userServices.clearCache();
     res.status(204).json({ cacheClear: "success" });
   } catch (err) {
     next(err);

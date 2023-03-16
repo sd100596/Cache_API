@@ -8,6 +8,7 @@ async function connectMongo(url) {
     })
     .catch(() => {
       console.log("MongoDB connection failed");
+      process.exit(1)
     });
 }
 

@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 const request = require("supertest");
 const app = require("../index");
-
 require("dotenv").config();
 
 /* Connecting to the database before each test. */
@@ -37,7 +36,6 @@ describe("GET /cache/get", () => {
 
     expect(res.statusCode).toBe(200);
     expect(res.body.value).toBe("johndoe@example.com");
-    expect(res.body.output).toBe("Cache Hit");
   });
 });
 
@@ -48,7 +46,6 @@ describe("GET /cache/get", () => {
     });
     expect(res.statusCode).toBe(201);
     expect(res.body.key).toBe("BlueBerry");
-    expect(res.body.output).toBe("Cache Miss");
   });
 });
 
