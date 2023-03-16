@@ -5,7 +5,7 @@ const handleGetKey = async (req, res, next) => {
     try {
         const key_name = req.headers["key-name"];
         if (!key_name) {
-            return res.send({
+            return res.status(400).send({
                 error: "Please provide a key name"
             })
         }
