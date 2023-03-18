@@ -1,6 +1,6 @@
-var mongoose = require("mongoose");
+const mongoose = require("mongoose");
 
-async function connectMongo(url) {
+module.exports = async function connectMongo(url) {
   mongoose
     .connect(url)
     .then(() => {
@@ -12,4 +12,3 @@ async function connectMongo(url) {
     });
 }
 
-module.exports = { connectMongo };

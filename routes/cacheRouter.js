@@ -1,5 +1,4 @@
 const express = require("express");
-const router = express.Router();
 const {
   handleGetKey,
   handleGetAllKeys,
@@ -7,20 +6,21 @@ const {
   handleDeleteKey,
   handleClearCache,
 } = require("../controllers/cacheController"); //Fetching the Cache Controller
+const router = express.Router();
 
-//Get value for a specific key
-router.get("/get", handleGetKey);
+// Method: GET --> Get value for a specific key
+// Method: DELETE --> DELETE a key,value pair
+router.route("/keys/:keyName")
+  .get(handleGetKey)
+  .delete(handleDeleteKey);
 
-//Get all keys
-router.get("/keys", handleGetAllKeys);
+// Method: GET --> Get all keys
+// Method: POST --> Add/Update a key,value pair
+router.route("/keys")
+  .get(handleGetAllKeys)
+  .post(handleSetKey);
 
-//Add/Update a key,value pair
-router.post("/set", handleSetKey);
-
-//DELETE a key,value pair
-router.delete("/delete", handleDeleteKey);
-
-//CLEAR the cache
+// Method: DELETE --> CLEAR the cache
 router.delete("/clear", handleClearCache);
 
 module.exports = router;

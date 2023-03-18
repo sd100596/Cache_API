@@ -1,6 +1,6 @@
 const Cache = require("../models/cache");
 
-const getData = async function (keyName) {
+const getData = async (keyName) => {
   let record = await Cache.find({ key: keyName });
   let result = {};
   if (record.length) {
@@ -13,7 +13,7 @@ const getData = async function (keyName) {
   return result;
 };
 
-const setData = async function (keyName, value) {
+const setData = async (keyName, value) => {
   const documentCount = await Cache.countDocuments();
   if (documentCount === 100) {
     await Cache.findOneAndDelete({}, { sort: { createdAt: 1 } });
@@ -29,7 +29,7 @@ const setData = async function (keyName, value) {
   );
 };
 
-const getAllKeys = async function () {
+const getAllKeys = async () => {
   let records = await Cache.find({});
   let keys = [];
   for (let each of records) {
@@ -38,18 +38,12 @@ const getAllKeys = async function () {
   return keys;
 };
 
-const deleteKey = async function (keyName) {
+const deleteKey = async (keyName) => {
   await Cache.deleteOne({ key: keyName });
 };
 
-const clearCache = async function () {
+const clearCache = async () => {
   await Cache.deleteMany({});
 };
 
-module.exports = {
-  getData,
-  setData,
-  getAllKeys,
-  deleteKey,
-  clearCache,
-};
+module.exports = { getData, setData, getAllKeys, deleteKey, clearCache };

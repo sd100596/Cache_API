@@ -1,9 +1,9 @@
 require("dotenv").config();
 const express = require("express");
-const { connectMongo } = require("./connection");
-const app = express();
-const { errorHandler, invalidRoute } = require("./middlewares/errorHandler");
-const cacheRouter = require("./routes/cacheRouter");
+const connectMongo = require("./connection.js");
+const { errorHandler, invalidRoute } = require("./middlewares/errorHandler.js");
+const cacheRouter = require("./routes/cacheRouter.js");
+const app = express()
 const helmet = require("helmet");
 const cors = require("cors");
 

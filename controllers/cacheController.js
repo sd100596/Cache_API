@@ -1,10 +1,11 @@
-const userServices = require('../services/userServices')
+const httpStatus = require("http-status");
+const userServices = require("../services/userServices");
 
 const handleGetKey = async (req, res, next) => {
   try {
-    const keyName = req.headers["key-name"];
+    const keyName = decodeURIComponent(req.params.keyName);
     if (!keyName) {
-      return res.status(400).send({
+      return res.status(httpStatus.BAD_REQUEST).send({
         error: "Please provide a key name",
       });
     }
@@ -18,10 +19,10 @@ const handleGetKey = async (req, res, next) => {
       console.log("Cache Miss");
       await userServices.setData(keyName, randomValue);
 
-      res.status(201).send({ key: keyName, value: randomValue });
+      res.status(httpStatus.CREATED).send({ key: keyName, value: randomValue });
     } else {
       console.log("Cache Hit");
-      res.send({
+      res.status(httpStatus.OK).send({
         key: result.key,
         value: result.value,
       });
@@ -35,7 +36,7 @@ const handleGetAllKeys = async (req, res, next) => {
   try {
     const cacheData = {};
     cacheData.keys = await userServices.getAllKeys();
-    res.send(cacheData);
+    res.status(httpStatus.OK).send(cacheData);
   } catch (err) {
     next(err);
   }
@@ -45,16 +46,16 @@ const handleSetKey = async (req, res, next) => {
   try {
     const { key_name: keyName, value } = req.body;
     if (!keyName) {
-      return res.status(400).send({
+      return res.status(httpStatus.BAD_REQUEST).send({
         error: "Please provide a key name",
       });
     } else if (!value) {
-      return res.status(400).send({
+      return res.status(httpStatus.BAD_REQUEST).send({
         error: "Please provide a value",
       });
     }
     await userServices.setData(keyName, value);
-    res.status(201).send({
+    res.status(httpStatus.CREATED).send({
       key: keyName,
       value: value,
     });
@@ -65,9 +66,9 @@ const handleSetKey = async (req, res, next) => {
 
 const handleDeleteKey = async (req, res, next) => {
   try {
-    const keyName = req.headers["key-name"];
+    const keyName = decodeURIComponent(req.params.keyName);
     await userServices.deleteKey(keyName);
-    res.status(204).send({ keyDeletion: "success" }); //sending response optional
+    res.status(httpStatus.NO_CONTENT).send({ keyDeletion: "success" }); //sending response optional
   } catch (err) {
     next(err);
   }
@@ -76,7 +77,7 @@ const handleDeleteKey = async (req, res, next) => {
 const handleClearCache = async (req, res, next) => {
   try {
     await userServices.clearCache();
-    res.status(204).json({ cacheClear: "success" });
+    res.status(httpStatus.NO_CONTENT).json({ cacheClear: "success" });
   } catch (err) {
     next(err);
   }

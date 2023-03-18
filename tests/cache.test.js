@@ -1,18 +1,21 @@
 const mongoose = require("mongoose");
 const request = require("supertest");
-const app = require("../index");
-require("dotenv").config();
+const app = require("../index.js");
 
-/* Connecting to the database before each test. */
-beforeEach(async () => {
+// Connect to the database before all tests
+beforeAll(async () => {
   await mongoose.connect(process.env.MONGODB_URI);
 });
 
-//Testing different API endpoints
+// Disconnect from the database after all tests
+afterAll(async () => {
+  await mongoose.disconnect();
+});
 
-describe("POST /cache/set", () => {
+//Testing different API endpoints
+describe("POST /cache/keys", () => {
   it("should add provided key and value in the cache", async () => {
-    const res = await request(app).post("/cache/set").send({
+    const res = await request(app).post("/cache/keys").send({
       key_name: "John Doe",
       value: "johndoe@example.com",
     });
@@ -28,32 +31,31 @@ describe("GET /cache/keys", () => {
   });
 });
 
-describe("GET /cache/get", () => {
-  it("should return value of the key provided in header", async () => {
-    const res = await request(app).get("/cache/get").set({
-      "key-name": "John Doe",
-    });
+describe("GET /cache/keys/{keyName}", () => {
+  it("should return value of the key-name provided in url", async () => {
+    const keyName = encodeURIComponent("John Doe");
+    const res = await request(app).get(`/cache/keys/${keyName}`);
 
     expect(res.statusCode).toBe(200);
     expect(res.body.value).toBe("johndoe@example.com");
   });
 });
 
-describe("GET /cache/get", () => {
+describe("GET /cache/keys/{keyName}", () => {
   it("should add new key if key name does not exist", async () => {
-    const res = await request(app).get("/cache/get").set({
-      "key-name": "BlueBerry",
-    });
+    const keyName = encodeURIComponent("BlueBerry");
+    const res = await request(app).get(`/cache/keys/${keyName}`);
+
     expect(res.statusCode).toBe(201);
     expect(res.body.key).toBe("BlueBerry");
   });
 });
 
-describe("DELETE /cache/delete", () => {
+describe("DELETE /cache/keys", () => {
   it("should delete a key", async () => {
-    const res = await request(app).delete("/cache/delete").set({
-      key_name: "John Doe",
-    });
+    const keyName = encodeURIComponent("John Doe");
+    const res = await request(app).delete(`/cache/keys/${keyName}`);
+
     expect(res.statusCode).toBe(204);
   });
 });
@@ -63,9 +65,4 @@ describe("DELETE /cache/clear", () => {
     const res = await request(app).delete("/cache/clear");
     expect(res.statusCode).toBe(204);
   });
-});
-
-/* Closing database connection after each test. */
-afterEach(async () => {
-  await mongoose.connection.close();
 });
