@@ -17,12 +17,8 @@ npm start
 ```
 
 ## API Routes
-### POST /cache/set
+### POST /cache/keys
 Create a new cache entry.
-
-**Required Headers:**
-
-- Content-Type: application/json
 
 Request Body:
 json
@@ -41,19 +37,17 @@ Response: 201
 }
 ```
 
-### GET /cache/get
+### GET /cache/keys/{keyName}
 Fetch an existing cache value based on the key provided.
 If key doesn't exist, new cache entry with provided key is added in cache with a random string value. 
 
-**Required Headers:**
-
-- key-name: <name of cache key>
+**Required**
+- keyName should be encodedURIComponent
 
 Response: 201
 (When key does not already exist)
 ```
 {
-        "output": "Cache Miss",
         "key": "John Doe",
         "value": "vjkk4"
 }  
@@ -63,7 +57,6 @@ Response: 200
 (When key exists)
 ```
 {
-        "output": "Cache Hit",
         "key": "John Doe",
         "value": "vjkk4"
 }  
@@ -81,12 +74,11 @@ Response: 200
 }
 ```
 
-### DELETE /cache/delete
+### DELETE /cache/keys/{keyName}
 Deletes a key present in the cache
 
-**Required Headers:**
-
-- key-name: <name of cache key>
+**Required**
+- keyName should be encodedURIComponent
 
 
 Response: 204 No Content
