@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const request = require("supertest");
-const app = require("../index.js");
+const { app, server } = require("../index.js");
 
 // Connect to the database before all tests
 beforeAll(async () => {
@@ -10,6 +10,7 @@ beforeAll(async () => {
 // Disconnect from the database after all tests
 afterAll(async () => {
   await mongoose.disconnect();
+  server.close()
 });
 
 //Testing different API endpoints
